@@ -4,13 +4,12 @@ import Pagination from "../components/Pagination";
 import { getImportLogs } from "../services/api";
 
 type ImportsPageProps = {
-  searchParams?: {
-    page?: string;
-  };
+  searchParams?: Promise<{ page?: string }>;
 };
 
 export default async function ImportsPage({ searchParams }: ImportsPageProps) {
-  const page = Number(searchParams?.page ?? 1);
+  const sp = (await searchParams) ?? {};
+  const page = Number(sp.page ?? 1);
   const { logs, totalPages } = await getImportLogs(page, 10);
 
   return (

@@ -3,8 +3,13 @@ import ImportHistoryTable from "./components/ImportHistoryTable";
 import Pagination from "./components/Pagination";
 import { getImportLogs } from "./services/api";
 
-export default async function HomePage() {
-  const page = 1;
+type HomePageProps = {
+  searchParams?: Promise<{ page?: string }>;
+};
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const sp = (await searchParams) ?? {};
+  const page = Number(sp.page ?? 1);
   const { logs, totalPages } = await getImportLogs(page, 10);
 
   return (
@@ -30,7 +35,7 @@ export default async function HomePage() {
         <Pagination
           currentPage={page}
           totalPages={totalPages}
-          makeHref={(p) => `/imports?page=${p}`}
+          makeHref={(p) => `/?page=${p}`}
         />
       </section>
     </main>
